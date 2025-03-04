@@ -1,0 +1,11 @@
+# Copyright (c) 2021 Nordic Semiconductor ASA
+# SPDX-License-Identifier: Apache-2.0
+
+config MAXIM_MAX30001
+	bool "MAX30001 ECG sensor"
+	default y
+	depends on DT_HAS_MAXIM_MAX30001_ENABLED
+    select GPIO
+	select SPI
+	help
+	  Enable MAX30001 ECG sensor

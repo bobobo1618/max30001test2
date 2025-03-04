@@ -1,0 +1,12 @@
+description: |
+  MAX30001 ECG sensor
+
+compatible: "maxim,max30001"
+
+include: [spi-device.yaml]
+
+properties:
+  interrupt-gpios:
+    type: phandle-array
+    required: true
+    description: Interrupt GPIO

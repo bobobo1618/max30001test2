@@ -7,43 +7,23 @@
 #include <zephyr/drivers/sensor.h>
 #include <zephyr/logging/log.h>
 
-#include <app/drivers/blink.h>
-
 #include <app_version.h>
 
 LOG_MODULE_REGISTER(main, CONFIG_APP_LOG_LEVEL);
 
-#define BLINK_PERIOD_MS_STEP 100U
-#define BLINK_PERIOD_MS_MAX  1000U
-
 int main(void)
 {
 	int ret;
-	unsigned int period_ms = BLINK_PERIOD_MS_MAX;
-	const struct device *sensor, *blink;
-	struct sensor_value last_val = { 0 }, val;
+	struct sensor_value val;
+	const struct device *sensor;
 
 	printk("Zephyr Example Application %s\n", APP_VERSION_STRING);
 
-	sensor = DEVICE_DT_GET(DT_NODELABEL(example_sensor));
+	sensor = DEVICE_DT_GET(DT_NODELABEL(max30001));
 	if (!device_is_ready(sensor)) {
 		LOG_ERR("Sensor not ready");
 		return 0;
 	}
-
-	blink = DEVICE_DT_GET(DT_NODELABEL(blink_led));
-	if (!device_is_ready(blink)) {
-		LOG_ERR("Blink LED not ready");
-		return 0;
-	}
-
-	ret = blink_off(blink);
-	if (ret < 0) {
-		LOG_ERR("Could not turn off LED (%d)", ret);
-		return 0;
-	}
-
-	printk("Use the sensor to change LED blinking period\n");
 
 	while (1) {
 		ret = sensor_sample_fetch(sensor);
@@ -58,23 +38,8 @@ int main(void)
 			return 0;
 		}
 
-		if ((last_val.val1 == 0) && (val.val1 == 1)) {
-			if (period_ms == 0U) {
-				period_ms = BLINK_PERIOD_MS_MAX;
-			} else {
-				period_ms -= BLINK_PERIOD_MS_STEP;
-			}
-
-			printk("Proximity detected, setting LED period to %u ms\n",
-			       period_ms);
-			blink_set_period_ms(blink, period_ms);
-		}
-
-		last_val = val;
-
 		k_sleep(K_MSEC(100));
 	}
 
 	return 0;
 }
-

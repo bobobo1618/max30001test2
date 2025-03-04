@@ -1,0 +1,42 @@
+&sai1 {
+	status = "disabled";
+	/delete-property/ pinctrl-0;
+	/delete-property/ pinctrl-names;
+};
+
+&pinctrl {
+    pinmux_flexcomm6_lpspi: pinmux_flexcomm6_lpspi {
+		group0 {
+			pinmux = <FC6_P0_PIO3_20>,
+                <FC6_P1_PIO3_21>,
+				<FC6_P2_PIO3_22>,
+				<FC6_P3_PIO3_23>;
+			slew-rate = "fast";
+			drive-strength = "low";
+			input-enable;
+		};
+	};
+
+	/delete-node/ pinmux_sai1;
+};
+
+&gpio5 {
+	status = "okay";
+};
+
+&flexcomm6 {
+	status = "okay";
+};
+
+&flexcomm6_lpspi6 {
+    status = "okay";
+	pinctrl-0 = <&pinmux_flexcomm6_lpspi>;
+	pinctrl-names = "default";
+
+	max30001: max30001@0 {
+		compatible = "maxim,max30001";
+		reg = <0>;
+		spi-max-frequency = <2000000>;
+		interrupt-gpios = <&gpio5 7 0>;
+	};
+};
