@@ -154,19 +154,8 @@ static int max30001_init(const struct device *dev) {
   }
 
   uint8_t first_five_registers[15];
-  printk("Reading reg\n");
-  k_msleep(10);
 
-  struct spi_buf rx_buf = {.buf = first_five_registers, .len=15};
-  struct spi_buf_set rx_bufs = {.buffers = &rx_buf, .count = 1};
-  ret = spi_read_dt(&config->bus, &rx_bufs);
-  if (ret) {
-    LOG_ERR("Could not read initial register values (%d)", ret);
-    return ret;
-  }
-
-  printk("Reading reg 2\n");
-  k_msleep(10);
+  k_msleep(100);
 
   ret = max30001_read_reg(dev, 0x00, first_five_registers, 15);
   if (ret) {

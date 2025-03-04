@@ -1,0 +1,10 @@
+&mikrobus_spi {
+    status = "okay";
+
+	max30001: max30001@0 {
+		compatible = "maxim,max30001";
+		reg = <0>;
+		spi-max-frequency = <2000000>;
+		interrupt-gpios = <&mikrobus_header 7 0>;
+	};
+};
